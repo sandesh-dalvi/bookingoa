@@ -9,7 +9,7 @@ const Places = () => {
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
-    axios.get("/places").then(({ data }) => {
+    axios.get("/user-places").then(({ data }) => {
       setPlaces(data);
     });
   }, []);
@@ -19,7 +19,7 @@ const Places = () => {
 
       <div className="text-center">
         <Link
-          className="inline-flex gap-1 bg-primary text-white py-2 px-4 rounded-full"
+          className="inline-flex  gap-1 bg-primary text-white py-2 px-4 rounded-full"
           to={"/account/places/new"}
         >
           <svg
@@ -44,7 +44,7 @@ const Places = () => {
           places.map((place) => (
             <Link
               to={"/account/places/" + place._id}
-              className=" cursor-pointer flex gap-4 bg-gray-200 p-2 rounded-2xl"
+              className=" cursor-pointer flex gap-4 bg-gray-200 p-2 rounded-2xl my-2"
               key={place._id}
             >
               <div className="flex w-32 h-32 bg-gray-300 grow shrink-0">
