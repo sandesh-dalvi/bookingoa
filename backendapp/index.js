@@ -13,6 +13,7 @@ const fs = require("fs");
 
 const UserModel = require("./models/User.js");
 const PlaceModel = require("./models/Place.js");
+const BookingModel = require("./models/Booking.js");
 
 const salt = bcrypt.genSaltSync(10);
 const jwtSecret = "anytypeofsecretestring";
@@ -32,6 +33,16 @@ app.use(
 );
 
 mongoose.connect(process.env.MONGO_URL);
+
+function getUserDataToken(token) {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+      if (err) throw err;
+
+      resolve(userData);
+    });
+  });
+}
 
 app.get("/test", (req, res) => {
   res.json("test ok");
@@ -226,6 +237,47 @@ app.put("/places", async (req, res) => {
 app.get("/places", async (req, res) => {
   const places = await PlaceModel.find();
   res.json(places);
+});
+
+app.post("/bookings", async (req, res) => {
+  const { token } = req.cookies;
+
+  const {
+    checkIn,
+    checkOut,
+    place,
+    numberOfGuests,
+    name,
+    email,
+    phone,
+    price,
+  } = req.body;
+
+  const userData = await getUserDataToken(token);
+
+  const bookingData = await BookingModel.create({
+    place,
+    user: userData.id,
+    checkIn,
+    checkOut,
+    numberOfGuests,
+    name,
+    email,
+    phone,
+    price,
+  });
+
+  res.json(bookingData);
+});
+
+app.get("/bookings", async (req, res) => {
+  const { token } = req.cookies;
+
+  const userData = await getUserDataToken(token);
+
+  const bookings = BookingModel.find({ user: userData.id });
+
+  res.json(bookings);
 });
 
 app.listen(5000);
