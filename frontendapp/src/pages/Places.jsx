@@ -4,6 +4,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import PlacesForm from "./PlacesForm";
 import AccountNav from "../components/AccountNav";
 import axios from "axios";
+import PlaceImg from "../components/PlaceImg";
 
 const Places = () => {
   const [places, setPlaces] = useState([]);
@@ -48,13 +49,7 @@ const Places = () => {
               key={place._id}
             >
               <div className="flex w-32 h-32 bg-gray-300 grow shrink-0">
-                {place.photos.length && (
-                  <img
-                    className="object-cover "
-                    src={"http://localhost:5000/uploads/" + place.photos[1]}
-                    alt=""
-                  />
-                )}
+                <PlaceImg place={place} />
               </div>
               <div className="grow-0 shrink">
                 <h2 className="text-xl ">{place.title}</h2>
